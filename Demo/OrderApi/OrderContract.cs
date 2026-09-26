@@ -2,5 +2,5 @@
 
 public class OrderContract
 {
-    public string? Reference { get; set; }
+    public required string Reference { get; set; }
 }

@@ -3,8 +3,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var rabbitmq = builder.AddRabbitMQ("rabbitmq")
     .WithManagementPlugin();
 
-var sql = builder.AddSqlServer("sql")
-    .WithLifetime(ContainerLifetime.Persistent);
+var sql = builder.AddSqlServer("sql");
 
 var db = sql.AddDatabase("database");
 

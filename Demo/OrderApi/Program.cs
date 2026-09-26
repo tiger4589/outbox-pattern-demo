@@ -1,5 +1,6 @@
 using Infra;
 using MassTransit;
+using Microsoft.AspNetCore.Http.HttpResults;
 using OrderApi;
 using Scalar.AspNetCore;
 
@@ -37,8 +38,24 @@ app.UseHttpsRedirection();
 
 app.MapPost("/order", async (OrderContract order, IPublishEndpoint publishEndpoint, AppDbContext dbContext) =>
 {
-    await publishEndpoint.Publish<OrderCreated>(new OrderCreated(150));
+    if (string.IsNullOrWhiteSpace(order.Reference))
+    {
+        return Results.BadRequest("Reference is required.");
+    }
+
+    var orderEntity = new Order
+    {
+        Id = Guid.CreateVersion7(),
+        Reference = order.Reference,
+    };
+
+    dbContext.Orders.Add(orderEntity);
+
+    await publishEndpoint.Publish<OrderCreated>(new OrderCreated(orderEntity.Id));
+
     await dbContext.SaveChangesAsync();
+
+    return Results.Created($"/order/{orderEntity.Id}", orderEntity);
 })
 .WithName("CreateOrder");
 

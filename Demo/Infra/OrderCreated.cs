@@ -1,3 +1,3 @@
 ﻿namespace Infra;
 
-public record OrderCreated(int Id);
+public record OrderCreated(Guid Id);

@@ -2,6 +2,6 @@
 
 public class Order
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
     public required string Reference { get; set; }
 }
