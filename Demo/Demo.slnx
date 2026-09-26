@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="AspireOutboxDemo/AspireOutboxDemo.AppHost/AspireOutboxDemo.AppHost.csproj" />
+  <Project Path="AspireOutboxDemo/AspireOutboxDemo.ServiceDefaults/AspireOutboxDemo.ServiceDefaults.csproj" />
+  <Project Path="DbOrchestrator/DbOrchestrator.csproj" />
+  <Project Path="Infra/Infra.csproj" />
+  <Project Path="OrderApi/OrderApi.csproj" />
+  <Project Path="WarehouseApi/WarehouseApi.csproj" />
+</Solution>

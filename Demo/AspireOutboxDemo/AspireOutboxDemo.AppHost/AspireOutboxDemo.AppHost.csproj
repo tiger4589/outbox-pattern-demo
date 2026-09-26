@@ -1,0 +1,23 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.5.4">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
+    <UserSecretsId>b9ad5754-e8a3-4905-8c3b-4db535440356</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="13.5.4" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DbOrchestrator\DbOrchestrator.csproj" />
+    <ProjectReference Include="..\..\OrderApi\OrderApi.csproj" />
+    <ProjectReference Include="..\..\WarehouseApi\WarehouseApi.csproj" />
+  </ItemGroup>
+
+</Project>
