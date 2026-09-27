@@ -1,6 +1,5 @@
 using Infra;
 using MassTransit;
-using Microsoft.AspNetCore.Http.HttpResults;
 using OrderApi;
 using Scalar.AspNetCore;
 
@@ -12,17 +11,20 @@ builder.AddSqlServerDbContext<AppDbContext>(
 
 builder.Services.AddOpenApi();
 
-builder.AddMassTransitRabbitMq(
-    "rabbitmq",
-    massTransitConfiguration: registration =>
+builder.Services.AddMassTransit(x =>
+{
+    x.AddEntityFrameworkOutbox<AppDbContext>(o =>
     {
-        registration.AddEntityFrameworkOutbox<AppDbContext>(o =>
-        {
-            o.UseSqlServer();
-            o.UseBusOutbox();
-        });
+        o.UseSqlServer();
+        o.UseBusOutbox();
     });
-builder.Services.AddSingleton<IBusControl>(sp => (IBusControl)sp.GetRequiredService<IBus>());
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration.GetConnectionString("rabbitmq"));
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 
@@ -51,7 +53,7 @@ app.MapPost("/order", async (OrderContract order, IPublishEndpoint publishEndpoi
 
     dbContext.Orders.Add(orderEntity);
 
-    await publishEndpoint.Publish<OrderCreated>(new OrderCreated(orderEntity.Id));
+    await publishEndpoint.Publish(new OrderCreated(orderEntity.Id));
 
     await dbContext.SaveChangesAsync();
 

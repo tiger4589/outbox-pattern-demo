@@ -12,20 +12,22 @@ builder.AddSqlServerDbContext<AppDbContext>(
 
 builder.Services.AddOpenApi();
 
-builder.AddMassTransitRabbitMq(
-    "rabbitmq",
-    massTransitConfiguration: registration =>
-    {
-        registration.AddConsumer<OrderCreatedConsumer>();
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<OrderCreatedConsumer>();
 
-        registration.AddEntityFrameworkOutbox<AppDbContext>(o =>
-        {
-            o.UseSqlServer();
-            o.UseBusOutbox();
-        });
+    x.AddEntityFrameworkOutbox<AppDbContext>(o =>
+    {
+        o.UseSqlServer();
+        o.UseBusOutbox();
     });
 
-builder.Services.AddSingleton<IBusControl>(sp => (IBusControl)sp.GetRequiredService<IBus>());
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration.GetConnectionString("rabbitmq"));
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 
