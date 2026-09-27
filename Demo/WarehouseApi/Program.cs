@@ -22,7 +22,7 @@ builder.Services.AddMassTransit(x =>
         o.UseBusOutbox();
     });
 
-    x.AddConfigureEndpointsCallback((context, nameof, cfg) =>
+    x.AddConfigureEndpointsCallback((context, name, cfg) =>
     {
         cfg.UseEntityFrameworkOutbox<AppDbContext>(context, opts =>
         {
