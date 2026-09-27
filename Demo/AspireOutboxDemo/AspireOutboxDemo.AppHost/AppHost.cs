@@ -15,13 +15,14 @@ builder.AddProject<Projects.OrderApi>("orderapi")
     .WithReference(db)
     .WaitFor(db)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
+    .WaitFor(rabbitmq)
+    .WaitForCompletion(migrations);
 
 builder.AddProject<Projects.WarehouseApi>("warehouseapi")
     .WithReference(db)
     .WaitFor(db)
     .WithReference(rabbitmq)
-    .WaitFor(rabbitmq);
-
+    .WaitFor(rabbitmq)
+    .WaitForCompletion(migrations);
 
 builder.Build().Run();
