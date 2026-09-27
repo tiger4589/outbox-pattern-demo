@@ -22,6 +22,15 @@ builder.Services.AddMassTransit(x =>
         o.UseBusOutbox();
     });
 
+    x.AddConfigureEndpointsCallback((context, nameof, cfg) =>
+    {
+        cfg.UseEntityFrameworkOutbox<AppDbContext>(context, opts =>
+        {
+            opts.MessageDeliveryLimit = 100;
+            opts.MessageDeliveryTimeout = TimeSpan.FromSeconds(30);
+        });
+    });
+
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host(builder.Configuration.GetConnectionString("rabbitmq"));
